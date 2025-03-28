@@ -40,6 +40,8 @@ CREATE TABLE data_dictionary (
 );
 
 ```
+
+### 📥 Populating the Data Dictionary Table
 ```sql
 INSERT INTO data_dictionary (variable_name, data_type, sample_value, source, allowed_values, transformation_rules) 
 VALUES 
@@ -54,3 +56,34 @@ VALUES
 ('Outcome', 'VARCHAR(50)', 'Recovered', 'Hospital Database', 'Recovered, Not Recovered', 'Ensure consistency'),
 ('Satisfaction', 'INT', '4', 'Survey System', '1-5 (Rating)', 'Ensure integer rating');
 ```
+### Data Validation & Confirmation
+#### Check Metadata info
+```sql
+SELECT * FROM data_dictionary 
+```
+![image](https://github.com/user-attachments/assets/84ac5650-41be-4320-b0e3-71a6861edee9)
+
+### Check for Missing Metadata
+```sql
+SELECT * FROM data_dictionary 
+WHERE data_type IS NULL OR source IS NULL;
+```
+
+### Validate Data Types
+```sql
+SELECT Variable_Name, Data_Type 
+FROM data_dictionary 
+```
+![image](https://github.com/user-attachments/assets/5cdbce68-6cf8-421e-a508-6f7e9562b307)
+
+### Check for Duplicate Entries
+```sql
+SELECT variable_name, COUNT(*) 
+FROM data_dictionary 
+GROUP BY variable_name 
+HAVING COUNT(*) > 1;
+```
+
+
+
+
