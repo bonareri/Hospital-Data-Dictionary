@@ -63,26 +63,76 @@ SELECT * FROM data_dictionary
 ```
 ![image](https://github.com/user-attachments/assets/84ac5650-41be-4320-b0e3-71a6861edee9)
 
-### Check for Missing Metadata
+### Key Insights from Patient Records (SQL Analysis)
+#### Most Common Medical Conditions
 ```sql
-SELECT * FROM data_dictionary 
-WHERE data_type IS NULL OR source IS NULL;
+SELECT Condition, COUNT(*) AS Condition_Count 
+FROM patient_records
+GROUP BY Condition
+ORDER BY Condition_Count DESC;
 ```
+![image](https://github.com/user-attachments/assets/60e9e85d-ad5f-4b04-a186-1e5003fbf999)
 
-### Validate Data Types
+#### Average Cost per Procedure
 ```sql
-SELECT Variable_Name, Data_Type 
-FROM data_dictionary 
+SELECT [Procedure], AVG(Cost) AS Avg_Cost 
+FROM patient_records
+GROUP BY [Procedure]
+ORDER BY Avg_Cost DESC;
 ```
-![image](https://github.com/user-attachments/assets/5cdbce68-6cf8-421e-a508-6f7e9562b307)
+![image](https://github.com/user-attachments/assets/3e60ad13-f5fb-4000-ae5e-debfab599d4e)
 
-### Check for Duplicate Entries
+#### Readmission Rates per Condition
 ```sql
-SELECT variable_name, COUNT(*) 
-FROM data_dictionary 
-GROUP BY variable_name 
-HAVING COUNT(*) > 1;
+SELECT Condition, 
+       COUNT(CASE WHEN Readmission = 1 THEN 1 END) * 100.0 / COUNT(*) AS Readmission_Rate
+FROM patient_records
+GROUP BY Condition
+ORDER BY Readmission_Rate DESC;
 ```
+![image](https://github.com/user-attachments/assets/bdee5374-7d61-4a9f-92b8-9cf14fb4a2be)
+
+#### Average Length of Stay per Condition
+```sql
+SELECT Condition, AVG(Length_of_Stay) AS Avg_Stay_Days 
+FROM patient_records
+GROUP BY Condition
+ORDER BY Avg_Stay_Days DESC;
+```
+![image](https://github.com/user-attachments/assets/1bf15a4a-e3fd-46f1-bc98-89dc03a61967)
+
+#### Patient Satisfaction Distribution
+```sql
+SELECT Satisfaction, COUNT(*) AS Patient_Count 
+FROM patient_records
+GROUP BY Satisfaction
+ORDER BY Satisfaction DESC;
+```
+![image](https://github.com/user-attachments/assets/760604e1-5290-4503-a020-a6cf7a71c379)
+
+#### Readmission Rate vs. Cost
+Do expensive treatments result in lower readmission rates?
+```sql
+SELECT 
+    CASE 
+        WHEN Cost < 5000 THEN 'Low Cost'
+        WHEN Cost BETWEEN 5000 AND 15000 THEN 'Medium Cost'
+        ELSE 'High Cost'
+    END AS Cost_Category,
+    COUNT(CASE WHEN Readmission = 1 THEN 1 END) * 100.0 / COUNT(*) AS Readmission_Rate
+FROM patient_records
+GROUP BY 
+    CASE 
+        WHEN Cost < 5000 THEN 'Low Cost'
+        WHEN Cost BETWEEN 5000 AND 15000 THEN 'Medium Cost'
+        ELSE 'High Cost'
+    END
+ORDER BY Readmission_Rate DESC;
+```
+![image](https://github.com/user-attachments/assets/78ec5511-750d-4d84-a2d4-46eacd217a6f)
+
+
+
 
 
 
