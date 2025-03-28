@@ -1,22 +1,22 @@
-# 📌 Hospital Patient Records Metadata Documentation
+# Hospital Patient Records Metadata Documentation
 
-## 📖 Project Overview  
+## Project Overview  
 This project focuses on documenting hospital patient records by creating a **data dictionary** with metadata. The goal is to ensure structured, standardized, and well-documented data, which is essential for data governance and analytics.
 
-## 📊 Dataset Information  
+## Dataset Information  
 The dataset consists of hospital patient records, including attributes like patient demographics, medical conditions, procedures, billing details, and outcomes.
 
-## 🛠 Tools & Technologies Used  
+## Tools & Technologies Used  
 - **SQL Server Management Studio (SSMS)** – To manage and query the database  
 - **SQL** – To store, retrieve, and manage data dictionary metadata  
 - **DBeaver** – (Optional) For database visualization  
 - **Excel/Google Sheets** – For metadata documentation  
 - **GitHub** – To showcase the project  
 
-## 📂 Data Dictionary Table Structure  
+## Data Dictionary Table Structure  
 The data dictionary table stores metadata about each variable in the hospital records dataset.
 
-### 🏛 Table Name: `data_dictionary`  
+### Table Name: `data_dictionary`  
 | Column Name        | Data Type   | Description                                     |
 |--------------------|------------|-------------------------------------------------|
 | `variable_name`    | VARCHAR(100) | Name of the column in the dataset              |
@@ -25,6 +25,22 @@ The data dictionary table stores metadata about each variable in the hospital re
 | `source`          | VARCHAR(100) | Source of the data (e.g., Billing System)      |
 | `allowed_values`   | VARCHAR(255) | Defined range or categories of values          |
 | `transformation_rules` | TEXT  | Data processing rules and standardizations     |
+
+
+### 🏥 Table Name: `patient_records`  
+
+| Column Name        | Data Type     | Description                                     |
+|--------------------|--------------|-------------------------------------------------|
+| `Patient_ID`      | INT           | Unique identifier for each patient             |
+| `Age`             | INT           | Age of the patient                             |
+| `Gender`          | VARCHAR(10)   | Gender of the patient (Male, Female)           |
+| `Condition`       | VARCHAR(100)  | Medical condition diagnosed                    |
+| `Procedure`       | VARCHAR(100)  | Medical procedure performed                    |
+| `Cost`            | FLOAT         | Cost of the procedure                          |
+| `Length_of_Stay`  | INT           | Number of days the patient stayed in hospital  |
+| `Readmission`     | VARCHAR(10)   | Whether the patient was readmitted (Yes, No)   |
+| `Outcome`         | VARCHAR(50)   | Final outcome (Recovered, Stable, Not Recovered) |
+| `Satisfaction`    | INT           | Patient satisfaction rating (1-5)              |
 
 ## 🔍 SQL Queries  
 
@@ -56,12 +72,41 @@ VALUES
 ('Outcome', 'VARCHAR(50)', 'Recovered', 'Hospital Database', 'Recovered, Not Recovered', 'Ensure consistency'),
 ('Satisfaction', 'INT', '4', 'Survey System', '1-5 (Rating)', 'Ensure integer rating');
 ```
+### 🎯 Creating the Patient Records Table 
+```sql
+CREATE TABLE patient_records (
+    Patient_ID INT PRIMARY KEY,
+    Age INT,
+    Gender VARCHAR(10),
+    Condition VARCHAR(100),
+    Procedure VARCHAR(100),
+    Cost FLOAT,
+    Length_of_Stay INT,
+    Readmission VARCHAR(10),
+    Outcome VARCHAR(50),
+    Satisfaction INT
+);
+
+```
 ### Data Validation & Confirmation
 #### Check Metadata info
 ```sql
 SELECT * FROM data_dictionary 
 ```
 ![image](https://github.com/user-attachments/assets/84ac5650-41be-4320-b0e3-71a6861edee9)
+
+#### Check for Missing Values:
+```sql
+SELECT * FROM patient_records 
+WHERE Age IS NULL OR Gender IS NULL OR Condition IS NULL;
+```
+
+#### Ensure Allowed Values:
+```sql
+SELECT * FROM patient_records WHERE Age < 0 OR Age > 120;
+SELECT * FROM patient_records WHERE Gender NOT IN ('Male', 'Female');
+```
+
 
 ### Key Insights from Patient Records (SQL Analysis)
 #### Most Common Medical Conditions
@@ -130,10 +175,3 @@ GROUP BY
 ORDER BY Readmission_Rate DESC;
 ```
 ![image](https://github.com/user-attachments/assets/78ec5511-750d-4d84-a2d4-46eacd217a6f)
-
-
-
-
-
-
-
